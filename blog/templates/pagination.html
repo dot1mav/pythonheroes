@@ -1,0 +1,26 @@
+<nav aria-label="Page pagination">
+    <ul class="pagination">
+    {% if posts.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}" aria-label="قبلی">&laquo;</a></li>
+    {% else %}
+      <li class="page-item disabled"><a class="page-link" href="#" onclick="javascript: return false;">&laquo;</a></li>
+    {% endif %}
+    {% for page in posts.paginator.page_range %}
+      {% if page %}
+        {% ifequal posts.number page %}
+          <li class="page-item active"><a class="page-link" href="#" onclick="javascript: return false;">{{ page }}</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+        {% endifequal %}
+      {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#" onclick="javascript: return false;">...</a></li>
+       {% endif %}
+    {% endfor %}
+    {% if posts.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}" aria-label="بعدی">&raquo;</a></li>
+    {% else %}
+      <li class="page-item disabled"><a class="page-link" href="#" onclick="javascript: return false;">&raquo;</a></li>
+    {% endif %}
+</ul>
+
+</nav>

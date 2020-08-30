@@ -1,0 +1,58 @@
+{% extends "blog/_base.html" %}
+{% load blog_tags %}
+{% load widget_tweaks %}
+{% load jalali_tags %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+  <br>
+  <h2>{{ post.title }}</h2>
+  <br>
+  <img class="card-img-top img-responsive thumbnail " src="{{ post.image.url }}" alt="Card image cap">
+  <p class="date">
+    <i class="ion-ios-clock"> &nbsp;{{ post.publish|to_jalali:'%y/%m/%d _ %H:%M:%S' }}</i>&nbsp;&nbsp;<i class="ion-person"><a href="#"> {{ post.author }}</a></i>
+  </p>
+  {{ post.body|markdown }}
+  <p>
+    <a href="{% url "blog:post_share" post.id %}">
+      Share this post
+    </a>
+  </p>
+  <h2>مقالات پیشنهادی</h2>
+  {% for post in similar_posts %}
+    <p>
+      <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+    </p>
+  {% empty %}
+    مقاله مشابه ای وجود ندارد.
+  {% endfor %}
+  <br>
+  {% with comments.count as total_comments %}
+  {% if total_comments > 0 %}
+    <h2>
+      {{ total_comments }}دیدگاه وجود دارد
+    </h2>
+  {% endif %}
+  {% endwith %}
+  {% for comment in comments %}
+    <div class="comment">
+      <p class="info">
+        پاسخ {{ comment.name }} در {{ comment.created|to_jalali:'%y/%m/%d _ %H:%M:%S' }}
+      </p>
+      {{ comment.body|linebreaks }}
+    </div>
+  {% empty %}
+  دیدگاهی وجود نداری اولین شخصی باشید که درباره این پست دیدگاهی دارد.
+  {% endfor %}
+  {% if new_comment %}
+    <h2>Your comment has been added.</h2>
+  {% else %}
+    <h2>دیدگاه خود را درمیان بگذارید</h2>
+    <form method="post">
+      {% include 'includes/bs4_form.html' with form=comment_form %}
+      {% csrf_token %}
+      <p><input type="submit" value="ارسال دیدگاه"></p>
+    </form>
+  {% endif %}
+{% endblock %}

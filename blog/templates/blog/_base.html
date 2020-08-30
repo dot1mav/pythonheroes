@@ -1,0 +1,147 @@
+{% load blog_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html dir="rtl" lang="fa-IR">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta property="og:locale" content="fa_IR" />
+  <title>{% block title %}{% endblock %}</title>
+
+
+  <!-- Custom styles for this template -->
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+  <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/samim-font@v4.0.5/dist/font-face.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+  <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css" integrity="sha384-vus3nQHTD+5mpDiZ4rkEPlnkcyTP+49BhJ4wJeJunw06ZAp+wzzeBPUXr42fi8If" crossorigin="anonymous">
+  <link href="{% static "css/blog-home.css" %}" rel="stylesheet">
+</head>
+
+<body class="rtl" style="font-family:'Samim';font-weight:normal;white-space:-moz-pre-wrap;word-wrap:break-word">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Python Heroes</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">خانه
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "blog:digikala_data" %}">دیجی کالا</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">آموزش ها</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "blog:post_list" %}">خانه</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Blog Entries Column -->
+      <div class="col-md-8">
+        {% block content %}
+        {% endblock %}
+      </div>
+      <!-- Sidebar Widgets Column -->
+            <div class="col-md-4">
+
+              <!-- Search Widget -->
+              <div class="card my-4">
+                <h5 class="card-header">جستجو</h5>
+                <div class="card-body">
+                  <div class="input-group">
+                    <form method="GET" action="{% url "blog:post_search" %}">
+                        <input type="text" class="form-control" id="searchbox" name="q" value="{{ request.GET.q }}" placeholder="جستجو...">
+                      <span class="input-group-append">
+                        <button class="btn btn-secondary" type="submit">Go!</button>
+                      </span>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Categories Widget -->
+              <div class="sidebar-module sidebar-module-inset border">
+                <p class="h4">دسته بندی ها</p>
+                  {% for tag in tags %}
+                    <a class="badge badge-light text-muted" href="{% url "blog:post_list_by_tag" tag.slug %}">{{ tag.name }}</a>
+                  {% endfor %}
+              </div>
+
+
+              <!-- Side Widget -->
+              <div class="card my-4">
+                <h5 class="card-header">درباره من</h5>
+                <div class="card-body">
+                  برنامه نویس پایتون و علافمند به توسه وب و امنیت
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          <!-- /.row -->
+
+        </div>
+        <!-- /.container -->
+        <!-- footer -->
+        <!-- Footer -->
+          <footer class="page-footer font-small special-color-dark pt-4">
+
+           <!-- Footer Elements -->
+           <div class="container">
+
+             <!-- Social buttons -->
+             <ul class="list-unstyled list-inline text-center">
+               <li class="list-inline-item">
+                 <a class="btn-floating btn-tw mx-1" href="">
+                   <i class="fa fa-twitter fa-2x" aria-hidden="true"></i>
+                 </a>
+               </li>
+               <li class="list-inline-item">
+                 <a class="btn-floating btn-dribbble mx-1" href="https://github.com/gholamiayub">
+                    <i class="fa fa-github fa-2x" aria-hidden="true"></i>
+                 </a>
+               </li>
+             </ul>
+             <!-- Social buttons -->
+
+           </div>
+           <!-- Footer Elements -->
+
+           <!-- Copyright -->
+           <!-- <div class="footer-copyright text-center py-3">© 2020 Copyright:
+             <a href="https://mdbootstrap.com/"> MDBootstrap.com</a>
+           </div> -->
+           <!-- Copyright -->
+
+          </footer>
+        <!-- footer -->
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://cdn.rtlcss.com/bootstrap/v4.2.1/js/bootstrap.min.js" integrity="sha384-a9xOd0rz8w0J8zqj1qJic7GPFfyMfoiuDjC9rqXlVOcGO/dmRqzMn34gZYDTel8k" crossorigin="anonymous"></script>
+
+</body>
+</html>

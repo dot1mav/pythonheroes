@@ -1,0 +1,42 @@
+{% extends "blog/_base.html" %}
+{% load blog_tags %}
+{% load jalali_tags %}
+
+{% block title %}Python Heroes{% endblock %}
+
+{% block content %}
+   <h1 class="my-4">
+     <small></small>
+   </h1>
+  {% if tag %}
+    <h2><button type="button" class="btn btn-success"><i class="ion-pound">{{ tag.name }}</i></button></h2>
+  {% endif %}
+  {% for post in posts %}
+    <div class="card mb-4">
+      <img class="card-img-top img-responsive thumbnail " src="{{ post.image.url }}" alt="Card image cap">
+      <div class="card-body">
+              <h2 class="card-title">{{ post.title }}</h2>
+              <p class="card-text">{{ post.body|markdown|truncatewords_html:30 }}</p>
+              <a href="{{ post.get_absolute_url }}" class="btn btn-primary">بیشتر</a>
+              </div>
+            <div class="card-footer text-muted">
+              <i class="ion-person"><a href="#"> {{ post.author }}</a>  &nbsp;</i><i class="fa fa-calendar" aria-hidden="true">  &nbsp;{{ post.publish|to_jalali:'%y/%m/%d _ %H:%M:%S' }}</i>
+              <p>
+                برچسب‌ها:
+                {% for tag in post.tags.all %}
+                  <!-- <button type="button" class="btn btn-primary"> -->
+                  <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+                    <i class="ion-pound" dir="rtl">
+                    {{ tag.name }}
+                    </i>
+                  </a>
+
+                  {% if not forloop.last %}&nbsp; {% endif %}
+                {% endfor %}
+              </p>
+            </div>
+          </div>
+
+  {% endfor %}
+  {% include "pagination.html" with page=posts %}
+{% endblock %}
