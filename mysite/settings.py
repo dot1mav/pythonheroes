@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
-
+PRODUCTION = False
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(os.path.join(__file__, os.pardir))))
 
@@ -25,6 +25,18 @@ SECRET_KEY = 'n1_0c)#3!h(nzg1%4z94u2+yz@!fv@&l&v*-rwxk)+dr(v7(mn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+if 'DEBUG' in os.environ:
+  # Set the Django setting from the environment variable.
+  DEBUG = os.environ['DEBUG'].lower() in ['true', '1']
+
+if 'SECRET_KEY' in os.environ:
+  # Set the Django setting from the environment variable.
+  SECRET_KEY = os.environ['SECRET_KEY']
+else:
+    import random
+    SECRET_KEY = ''.join(random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50))
+
 
 ADMINS = (
     ('ayoub', 'gholami.ayub73@gmail.com'),
@@ -170,27 +182,29 @@ STATIC_URL = '/static/'
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-if 'DEBUG' in os.environ:
-  # Set the Django setting from the environment variable.
-  DEBUG = os.environ['DEBUG'].lower() in ['true', '1']
 
-if 'SECRET_KEY' in os.environ:
-  # Set the Django setting from the environment variable.
-  SECRET_KEY = os.environ['SECRET_KEY']
+if PRODUCTION:
+    # Configure database
+    import dj_database_url
 
+    MAX_CONN_AGE = 600
 
-# Configure database
-import dj_database_url
+    if 'DATABASES' not in locals():
+      DATABASES = {'default': None}
 
-MAX_CONN_AGE = 600
+    try:
+      conn_max_age = CONN_MAX_AGE or MAX_CONN_AGE
+    except NameError:
+      conn_max_age = MAX_CONN_AGE
 
-if 'DATABASES' not in locals():
-  DATABASES = {'default': None}
-
-try:
-  conn_max_age = CONN_MAX_AGE or MAX_CONN_AGE
-except NameError:
-  conn_max_age = MAX_CONN_AGE
-
-if 'DATABASE_URL' in os.environ:
-  DATABASES['default'] = dj_database_url.config(conn_max_age=conn_max_age, ssl_require=False)
+    if 'DATABASE_URL' in os.environ:
+      DATABASES['default'] = dj_database_url.config(conn_max_age=conn_max_age, ssl_require=False)
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'blog',
+            'USER': 'blog',
+            'PASSWORD': 'Sun2552',
+        }
+    }
