@@ -1,7 +1,3 @@
-import requests
-import re
-from bs4 import BeautifulSoup as bs
-
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage,\
@@ -135,18 +131,3 @@ def post_search(request):
                   {'form': form,
                    'query': query,
                    'results': results})
-
-def digikala(request):
-    data = requests.get("https://www.digikala.com/search/category-notebook-netbook-ultrabook/")
-    soup = bs(data.text, 'html.parser')
-
-    soup.section.extract() # ignore section tag with "c-swiper c-swiper--products" class
-
-    names = [name.text.strip() for name in soup.find_all('div', class_="c-product-box__title")]
-    prices = [price.text.strip() for price in soup.find_all('div', class_="c-price__value-wrapper")]
-    images_tag = soup.find_all('a', class_="c-product-box__img c-promotion-box__image js-url js-product-item js-product-url")
-    images_link = [re.search(r'src=\"(.*q_90)?', str(item), re.MULTILINE).group(1) for item in images_tag]
-    context = [{'name': names[i], 'link': images_link[i], 'price': prices[i]} for i in range(len(images_link))]
-    return render(request,
-                  'blog/digikala.html',
-                  {'context': context})
